@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset='utf-8'/>
+        <title>烟花</title>
+        <style>
+            body{margin:0;padding:0;}
+            #can{display:block;}
+        </style>
+    </head>
+    <body>
+        <canvas id='can'></canvas>
+        <script type="text/javascript" charset="utf-8">
+            var can = document.getElementById('can');
+            var w = can.width = window.innerWidth;
+            var h = can.height = window.innerHeight;
+            var star = {
+                obj:can,
+                num:30,
+                timeout:300,
+                speed:5
+            };
+            function Star(b){for(var a in b){if(b.hasOwnProperty(a)){this[a]=b[a]}}this.init()}Star.prototype={init:function(){this.width=this.width||this.obj.width;this.height=this.height||this.obj.height;this.ctx=this.obj.getContext("2d");this.x=this.x||0;this.y=this.y||0;this.createMap()},createMap:function(){this.map=[];var b=this;for(var a=0;a<this.num;a++){(function(c){window.setTimeout(function(){b.map[c]=b.create()},b.timeout*c)}(a))}this.play()},create:function(){var d=this.width;var g=this.height;var f=this.speed;var e=2;var i=f-e;var c=Math.random;var b=c()+0.4;b=b>1?1:b;return{x:(d-10)*c()+5,y:g-5,sy:c()*i+e,color:this.getColor(b),top:g*0.1+g*0.2*c(),a:b}},draw:function(c){var b=this.ctx;var d=this.map[c];var e=d.afterTop;if(d.y>d.top){b.beginPath();b.fillStyle=d.color;b.fillRect(d.x,d.y,5,5)}else{if(e){for(var c=0;c<e.length;c++){var a=e[c];b.beginPath();b.fillStyle=a.color;b.arc(a.x,a.y,5,0,2*Math.PI);b.fill()}}}},step:function(){this.ctx.fillStyle="rgba(255,255,255,.2)";this.ctx.fillRect(this.x,this.y,this.width,this.height);for(var a=0;a<this.map.length;a++){this.draw(a);this.updata(a)}},getColor:function(a,e){if(e){var d=e.split(",");d[3]=a+")";d=d.join(",");return d}var b=Math.random;var c=Math.floor;a=Number(a);a=a?a>1?1:a:1;return"rgba("+c(b()*255)+","+c(b()*255)+","+c(b()*255)+","+a+")"},updata:function(b){var c=this.map[b];var d=c.afterTop;if(c.y>c.top){c.y-=c.sy}else{if(c.a<0.03){this.map[b]=this.create()}else{if(d){for(var b=0;b<d.length;b++){var a=d[b];a.x+=a.sx;a.y+=a.sy;a.sy=a.sy>0?a.sy+=a.sy*=a.l:a.sy-=a.sy*=a.l;a.color=this.getColor(c.a,a.color)}c.a*=0.96}else{c.afterTop=this.createAfterTop(c)}}}},createAfterTop:function(c){var d=[];var b=Math.random;for(var a=0;a<10+Math.floor(Math.random()*40);a++){d[d.length]={x:c.x,y:c.y,sx:b()*2-1,sy:b()*2-1,l:0.01,color:this.getColor(c.a)}}return d},play:function(){var a=this;cancelAnimationFrame(a.stop);a.step();a.stop=window.requestAnimationFrame(function(){a.play()})}};
+            var m = new Star(star);
+            
+        </script>
+    </body>
+</html>
